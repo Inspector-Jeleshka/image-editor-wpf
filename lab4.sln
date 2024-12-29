@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wpfApp", "wpfApp\wpfApp.csproj", "{A708150F-C5FE-4AB9-A1D5-780360771C0B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB467268-2083-418C-9F09-EF3F47BADF6C} = {EB467268-2083-418C-9F09-EF3F47BADF6C}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageEditing", "..\lab3\ImageEditing\ImageEditing.csproj", "{EB467268-2083-418C-9F09-EF3F47BADF6C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A708150F-C5FE-4AB9-A1D5-780360771C0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A708150F-C5FE-4AB9-A1D5-780360771C0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A708150F-C5FE-4AB9-A1D5-780360771C0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A708150F-C5FE-4AB9-A1D5-780360771C0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB467268-2083-418C-9F09-EF3F47BADF6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB467268-2083-418C-9F09-EF3F47BADF6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB467268-2083-418C-9F09-EF3F47BADF6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB467268-2083-418C-9F09-EF3F47BADF6C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
