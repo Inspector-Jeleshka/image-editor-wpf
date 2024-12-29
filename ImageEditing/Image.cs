@@ -17,15 +17,15 @@
 			file.Read(fileData, 0, (int)file.Length);
 
 			if (BitConverter.ToInt16(fileData, 0) is not (0x424d or 0x4d42))
-				throw new NotSupportedException("Incorrect signature");
+				throw new NotSupportedException("Некорректная сигнатура файла");
 			if (BitConverter.ToInt32(fileData, 22) < 0)
-				throw new NotSupportedException("Unsupported pixel array layout (negative image height)");
+				throw new NotSupportedException("Неподдерживаемая структура пиксельного массива (отрицательная высота изображения)");
 			if (BitConverter.ToInt16(fileData, 28) is not 24)
-				throw new NotSupportedException("Unsupported color depth");
+				throw new NotSupportedException("Неподдерживаемая глубина цвета");
 			if (BitConverter.ToInt32(fileData, 30) != 0)
-				throw new NotSupportedException("Unsupported compression method");
+				throw new NotSupportedException("Неподдерживаемый метод сжатия");
 			if (BitConverter.ToInt32(fileData, 46) != 0)
-				throw new NotSupportedException("Unsupported color table");
+				throw new NotSupportedException("Неподдерживаемая таблица цветов");
 
 			fileSize = BitConverter.ToInt32(fileData, 2);
 			pixelArrayOffset = BitConverter.ToInt32(fileData, 10);
@@ -60,13 +60,19 @@
 
 		public void Crop(int x1, int y1, int x2, int y2)
 		{
-			if (x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0)
-				throw new ArgumentOutOfRangeException(nameof(x1), "Less than 0");
+			if (x1 < 0)
+				throw new ArgumentOutOfRangeException(nameof(x1), "Значение меньше 0");
+			if (x2 < 0)
+				throw new ArgumentOutOfRangeException(nameof(x2), "Значение меньше 0");
+			if (y1 < 0)
+				throw new ArgumentOutOfRangeException(nameof(y1), "Значение меньше 0");
+			if (y2 < 0)
+				throw new ArgumentOutOfRangeException(nameof(y2), "Значение меньше 0");
 
 			int newImageWidth = Math.Abs(x2 - x1);
 			int newImageHeight = Math.Abs(y2 - y1);
 			if (newImageWidth == 0 || newImageHeight == 0)
-				throw new ArgumentException("Image can't have side with a 0 length");
+				throw new ArgumentException("Изображение не может иметь сторону длиной 0");
 
 			Pixel[,] croppedImage = new Pixel[newImageHeight, newImageWidth];
 			x1 = x1 < x2 ? x1 : x2;
@@ -87,7 +93,7 @@
 		public void Rotate(double angle, int x, int y)
 		{
 			if (x < 0 || y < 0)
-				throw new ArgumentOutOfRangeException(x < 0 ? nameof(x) : nameof(y), "Less than 0");
+				throw new ArgumentOutOfRangeException(x < 0 ? nameof(x) : nameof(y), "Значение меньше 0");
 
 			int imageHeight = header.bmpHeight, imageWidth = header.bmpWidth;
 			Pixel[,] rotatedPixelArray = new Pixel[imageHeight, imageWidth];
@@ -165,9 +171,9 @@
 		public void SetPixel(int x, int y, Pixel pixel)
 		{
 			if (x < 0 || x >= header.bmpWidth)
-				throw new ArgumentOutOfRangeException(nameof(x), "Outside the pixel array");
+				throw new ArgumentOutOfRangeException(nameof(x), "За пределами массива пикселей");
 			if (y < 0 || y >= header.bmpHeight)
-				throw new ArgumentOutOfRangeException(nameof(y), "Outside the pixel array");
+				throw new ArgumentOutOfRangeException(nameof(y), "За пределами массива пикселей");
 
 			pixelArray[y, x] = pixel;
 		}
@@ -188,9 +194,9 @@
 		public void EditContrast(double value)
 		{
 			if (value < -254)
-				throw new ArgumentOutOfRangeException(nameof(value), "Less than -254");
+				throw new ArgumentOutOfRangeException(nameof(value), "Значение меньше -254");
 			if (value > 258)
-				throw new ArgumentOutOfRangeException(nameof(value), "Greater than 258");
+				throw new ArgumentOutOfRangeException(nameof(value), "Значение больше 258");
 			double k = 259d * (value + 255d) / (255d * (259d - value));
 
 			for (int i = 0; i < header.bmpHeight; i++)
@@ -210,50 +216,45 @@
 		}
 		public void SaveToFile(string path)
 		{
-			try
+
+			using FileStream file = File.OpenWrite(path);
+
+			List<byte> data = new();
+			data.AddRange(BitConverter.GetBytes((short)0x4d42));
+			data.AddRange(BitConverter.GetBytes(fileSize));
+			data.AddRange(BitConverter.GetBytes(0));
+			data.AddRange(BitConverter.GetBytes(pixelArrayOffset));
+			data.AddRange(BitConverter.GetBytes(header.headerSize));
+			data.AddRange(BitConverter.GetBytes(header.bmpWidth));
+			data.AddRange(BitConverter.GetBytes(header.bmpHeight));
+			data.AddRange(BitConverter.GetBytes(header.colorPlanes));
+			data.AddRange(BitConverter.GetBytes(header.bitsPerPixel));
+			data.AddRange(BitConverter.GetBytes(header.compression));
+			data.AddRange(BitConverter.GetBytes(header.bmpSize));
+			data.AddRange(BitConverter.GetBytes(header.horizontalResolution));
+			data.AddRange(BitConverter.GetBytes(header.verticalResolution));
+			data.AddRange(BitConverter.GetBytes(header.colorTableSize));
+			data.AddRange(BitConverter.GetBytes(header.importantColors));
+			byte[] gap = new byte[pixelArrayOffset - 14 - header.headerSize];
+			data.AddRange(gap);
+
+			byte[] padding = new byte[RowSize - header.bmpWidth * header.bitsPerPixel / 8];
+			for (int i = header.bmpHeight - 1; i >= 0; i--)
 			{
-				using FileStream file = File.OpenWrite(path);
-
-				List<byte> data = new();
-				data.AddRange(BitConverter.GetBytes((short)0x4d42));
-				data.AddRange(BitConverter.GetBytes(fileSize));
-				data.AddRange(BitConverter.GetBytes(0));
-				data.AddRange(BitConverter.GetBytes(pixelArrayOffset));
-				data.AddRange(BitConverter.GetBytes(header.headerSize));
-				data.AddRange(BitConverter.GetBytes(header.bmpWidth));
-				data.AddRange(BitConverter.GetBytes(header.bmpHeight));
-				data.AddRange(BitConverter.GetBytes(header.colorPlanes));
-				data.AddRange(BitConverter.GetBytes(header.bitsPerPixel));
-				data.AddRange(BitConverter.GetBytes(header.compression));
-				data.AddRange(BitConverter.GetBytes(header.bmpSize));
-				data.AddRange(BitConverter.GetBytes(header.horizontalResolution));
-				data.AddRange(BitConverter.GetBytes(header.verticalResolution));
-				data.AddRange(BitConverter.GetBytes(header.colorTableSize));
-				data.AddRange(BitConverter.GetBytes(header.importantColors));
-				byte[] gap = new byte[pixelArrayOffset - 14 - header.headerSize];
-				data.AddRange(gap);
-
-				byte[] padding = new byte[RowSize - header.bmpWidth * header.bitsPerPixel / 8];
-				for (int i = header.bmpHeight - 1; i >= 0; i--)
+				for (int j = 0; j < header.bmpWidth; j++)
 				{
-					for (int j = 0; j < header.bmpWidth; j++)
-					{
-						data.Add(pixelArray[i, j].Blue);
-						data.Add(pixelArray[i, j].Green);
-						data.Add(pixelArray[i, j].Red);
-					}
-					data.AddRange(padding);
+					data.Add(pixelArray[i, j].Blue);
+					data.Add(pixelArray[i, j].Green);
+					data.Add(pixelArray[i, j].Red);
 				}
-
-				if (data.Count % 4 != 0)
-					data.AddRange(new byte[4 - data.Count % 4]);
-
-				file.Write(data.ToArray(), 0, fileSize);
+				data.AddRange(padding);
 			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-			}
+
+			if (data.Count % 4 != 0)
+				data.AddRange(new byte[4 - data.Count % 4]);
+
+			file.Write(data.ToArray(), 0, fileSize);
+
 		}
 
 
