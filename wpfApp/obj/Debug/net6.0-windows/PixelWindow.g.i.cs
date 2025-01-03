@@ -101,7 +101,7 @@ namespace wpfApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/wpfApp;V1.0.0.0;component/pixelwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/wpfApp;component/pixelwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\PixelWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

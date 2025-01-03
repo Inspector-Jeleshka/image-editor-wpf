@@ -93,7 +93,7 @@ namespace wpfApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/wpfApp;V1.0.0.0;component/collagewindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/wpfApp;component/collagewindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\CollageWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

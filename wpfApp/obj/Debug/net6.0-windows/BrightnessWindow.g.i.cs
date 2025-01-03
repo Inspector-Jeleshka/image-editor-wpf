@@ -69,7 +69,7 @@ namespace wpfApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/wpfApp;V1.0.0.0;component/brightnesswindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/wpfApp;component/brightnesswindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\BrightnessWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

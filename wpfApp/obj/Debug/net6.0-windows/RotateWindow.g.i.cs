@@ -85,7 +85,7 @@ namespace wpfApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/wpfApp;V1.0.0.0;component/rotatewindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/wpfApp;component/rotatewindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\RotateWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

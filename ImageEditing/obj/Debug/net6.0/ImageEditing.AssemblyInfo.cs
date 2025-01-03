@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ImageEditing")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c3875fb456c38ca195b6622d229a3cca397250e4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+252bff8d034ead67259af77ee952e3da5046d8db")]
 [assembly: System.Reflection.AssemblyProductAttribute("ImageEditing")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ImageEditing")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

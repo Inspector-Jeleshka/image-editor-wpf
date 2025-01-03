@@ -69,7 +69,7 @@ namespace wpfApp {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/wpfApp;V1.0.0.0;component/contrastwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/wpfApp;component/contrastwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\ContrastWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
